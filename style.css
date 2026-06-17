@@ -509,6 +509,7 @@ body {
   object-fit: cover;
   opacity: 0;
   transition: opacity 1.5s ease-in-out;
+  will-change: opacity; /* Otimização: Avisa a GPU da transição */
   pointer-events: none;
 }
 
@@ -561,7 +562,7 @@ body {
     rgba(255, 80, 0, 0.15) 40%,
     transparent 70%
   );
-  animation: fogueiraPulso 2s ease-in-out infinite alternate;
+  animation: fogueiraPulso 3s ease-in-out infinite alternate; /* Retardado em 50% para poupar TV */
 }
 
 @keyframes fogueiraPulso {
@@ -584,7 +585,7 @@ body {
   border-radius: 50%;
   background: #ffba08;
   box-shadow: 0 0 6px 2px rgba(255, 186, 8, 0.8);
-  animation: fagulhaSubir 4s ease-out infinite;
+  animation: fagulhaSubir 6s ease-out infinite; /* Retardado em 50% */
   opacity: 0;
 }
 
@@ -602,15 +603,15 @@ body {
   }
 }
 
-/* Posições e tempos variados para cada fagulha */
-.junina-fagulha--1 { bottom: 12%; left: 48%; --drift: -15px; animation-delay: 0s; animation-duration: 3.5s; }
-.junina-fagulha--2 { bottom: 14%; left: 51%; --drift: 20px;  animation-delay: 0.5s; animation-duration: 4s; }
-.junina-fagulha--3 { bottom: 10%; left: 49%; --drift: -8px;  animation-delay: 1s; animation-duration: 3.8s; }
-.junina-fagulha--4 { bottom: 13%; left: 52%; --drift: 12px;  animation-delay: 1.5s; animation-duration: 4.2s; }
-.junina-fagulha--5 { bottom: 11%; left: 47%; --drift: -22px; animation-delay: 2s; animation-duration: 3.2s; }
-.junina-fagulha--6 { bottom: 15%; left: 50%; --drift: 5px;   animation-delay: 2.5s; animation-duration: 3.6s; }
-.junina-fagulha--7 { bottom: 12%; left: 53%; --drift: 18px;  animation-delay: 0.8s; animation-duration: 4.5s; }
-.junina-fagulha--8 { bottom: 14%; left: 46%; --drift: -10px; animation-delay: 1.8s; animation-duration: 3.9s; }
+/* Posições e tempos variados para cada fagulha (Todos +50% de duração) */
+.junina-fagulha--1 { bottom: 12%; left: 48%; --drift: -15px; animation-delay: 0s; animation-duration: 5.25s; }
+.junina-fagulha--2 { bottom: 14%; left: 51%; --drift: 20px;  animation-delay: 0.5s; animation-duration: 6s; }
+.junina-fagulha--3 { bottom: 10%; left: 49%; --drift: -8px;  animation-delay: 1s; animation-duration: 5.7s; }
+.junina-fagulha--4 { bottom: 13%; left: 52%; --drift: 12px;  animation-delay: 1.5s; animation-duration: 6.3s; }
+.junina-fagulha--5 { bottom: 11%; left: 47%; --drift: -22px; animation-delay: 2s; animation-duration: 4.8s; }
+.junina-fagulha--6 { bottom: 15%; left: 50%; --drift: 5px;   animation-delay: 2.5s; animation-duration: 5.4s; }
+.junina-fagulha--7 { bottom: 12%; left: 53%; --drift: 18px;  animation-delay: 0.8s; animation-duration: 6.75s; }
+.junina-fagulha--8 { bottom: 14%; left: 46%; --drift: -10px; animation-delay: 1.8s; animation-duration: 5.85s; }
 
 
 /* ---- ESTRELAS — Piscando no céu ---- */
@@ -621,7 +622,7 @@ body {
   border-radius: 50%;
   background: #fff;
   box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.6);
-  animation: estrelaPiscar 3s ease-in-out infinite alternate;
+  animation: estrelaPiscar 4.5s ease-in-out infinite alternate; /* Retardado em 50% */
 }
 
 @keyframes estrelaPiscar {
@@ -630,13 +631,14 @@ body {
   100% { opacity: 0.3; transform: scale(0.9); }
 }
 
+/* Tempos aumentados em 50% para aliviar processamento */
 .junina-estrela--1 { top: 5%;  left: 10%; animation-delay: 0s; }
-.junina-estrela--2 { top: 8%;  left: 30%; animation-delay: 0.7s; animation-duration: 2.5s; }
-.junina-estrela--3 { top: 3%;  left: 55%; animation-delay: 1.2s; animation-duration: 3.5s; }
-.junina-estrela--4 { top: 12%; left: 75%; animation-delay: 0.4s; animation-duration: 2.8s; }
+.junina-estrela--2 { top: 8%;  left: 30%; animation-delay: 0.7s; animation-duration: 3.75s; }
+.junina-estrela--3 { top: 3%;  left: 55%; animation-delay: 1.2s; animation-duration: 5.25s; }
+.junina-estrela--4 { top: 12%; left: 75%; animation-delay: 0.4s; animation-duration: 4.2s; }
 .junina-estrela--5 { top: 6%;  left: 88%; animation-delay: 1.8s; }
-.junina-estrela--6 { top: 15%; left: 20%; animation-delay: 2.1s; animation-duration: 4s; }
-.junina-estrela--7 { top: 10%; left: 65%; animation-delay: 0.9s; animation-duration: 3.2s; }
+.junina-estrela--6 { top: 15%; left: 20%; animation-delay: 2.1s; animation-duration: 6s; }
+.junina-estrela--7 { top: 10%; left: 65%; animation-delay: 0.9s; animation-duration: 4.8s; }
 
 
 /* ---- VARAL DE LUZES — Luzinhas coloridas no topo ---- */
@@ -658,7 +660,7 @@ body {
   height: 18px;
   border-radius: 0 0 50% 50%;
   margin-top: -2px;
-  animation: luzPiscar 2s ease-in-out infinite alternate;
+  animation: luzPiscar 3s ease-in-out infinite alternate; /* Retardado em 50% */
   /* Leve balanço */
   transform-origin: top center;
 }
@@ -748,7 +750,7 @@ body {
     49.4% 0%, 50.6% 0%, 51.4% 100%, 49.6% 100%
   );
   opacity: 0.6;
-  animation: bandeirinhasBalanco 4s ease-in-out infinite alternate;
+  animation: bandeirinhasBalanco 6s ease-in-out infinite alternate; /* Retardado em 50% */
 }
 
 @keyframes bandeirinhasBalanco {

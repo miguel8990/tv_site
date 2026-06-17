@@ -85,6 +85,7 @@ function criarCardHTML(produto) {
           alt="${produto.nome}"
           class="card__img"
           loading="eager"
+          decoding="sync"
         >
       </div>
 
@@ -129,26 +130,19 @@ function montarCarrossel() {
 }
 
 /**
- * Inicia o scroll contínuo do carrossel via requestAnimationFrame.
- * Usa delta de tempo real para ser independente do frame rate.
- *
- * Velocidade: 1 set completo de cards a cada 40 segundos.
+ * Inicia o scroll contínuo do carrossel injetando animação CSS dinamicamente.
+ * Otimizado para Smart TV: Remove a carga de cálculo por frame do JS (requestAnimationFrame)
+ * e delega tudo para a GPU usando transform: translate3d.
  *
  * Reset pixel-perfect:
- * Em vez de usar scrollWidth/2 (impreciso por causa de padding
- * e gap), medimos o offsetLeft do 1º card do set2 duplicado.
- * Isso garante que o reset caia EXATAMENTE no pixel certo,
- * eliminando qualquer flicker ou salto visível.
+ * Medimos o offsetLeft do 1º card do set2 duplicado para gerar um
+ * keyframes exato. A velocidade foi reduzida em 30% (52s) para dar folga.
  */
 function iniciarCarrosselJS() {
   const trilha = document.getElementById("carrossel-trilha");
-  const DURACAO_CICLO_MS = 40000; // 40 segundos por set
   const totalProdutos = produtos.length;
 
-  let posicaoAtual = 0;
-  let ultimoTimestamp = null;
-
-  // Aguarda 2 frames para garantir que o layout está 100% calculado
+  // Aguarda 2 frames para garantir que o layout está 100% calculado antes de medir
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       // Pega todos os cards renderizados
@@ -158,37 +152,23 @@ function iniciarCarrosselJS() {
       // Seu offsetLeft é a distância exata de 1 ciclo completo
       const distanciaCiclo = cards[totalProdutos].offsetLeft - cards[0].offsetLeft;
 
-      // Velocidade em pixels por milissegundo
-      const velocidade = distanciaCiclo / DURACAO_CICLO_MS;
-
-      /**
-       * Loop de animação contínuo via requestAnimationFrame.
-       * @param {DOMHighResTimeStamp} timestamp
-       */
-      function animar(timestamp) {
-        if (ultimoTimestamp === null) {
-          ultimoTimestamp = timestamp;
-          requestAnimationFrame(animar);
-          return;
+      // Injeta uma tag <style> dinamicamente para forçar aceleração de hardware (GPU)
+      // O uso do translate3d() previne repinturas de CPU engasgarem a TV
+      const styleSheet = document.createElement("style");
+      styleSheet.innerHTML = `
+        @keyframes scrollInfinitoTV {
+          0% {
+            transform: translate3d(0, 0, 0);
+          }
+          100% {
+            transform: translate3d(-${distanciaCiclo}px, 0, 0);
+          }
         }
+      `;
+      document.head.appendChild(styleSheet);
 
-        const delta = timestamp - ultimoTimestamp;
-        ultimoTimestamp = timestamp;
-
-        // Avança proporcionalmente ao tempo real decorrido
-        posicaoAtual -= velocidade * delta;
-
-        // Reset pixel-perfect: quando atingimos a distância de 1 ciclo,
-        // somamos de volta. Visualmente imperceptível pois set2 = set1.
-        if (Math.abs(posicaoAtual) >= distanciaCiclo) {
-          posicaoAtual += distanciaCiclo;
-        }
-
-        trilha.style.transform = `translateX(${posicaoAtual}px)`;
-        requestAnimationFrame(animar);
-      }
-
-      requestAnimationFrame(animar);
+      // Aplica a animação com velocidade reduzida (52s = 40s + 30%)
+      trilha.style.animation = "scrollInfinitoTV 52s linear infinite";
     });
   });
 }
@@ -227,8 +207,7 @@ function animarLogo() {
 
 /**
  * Inicia o loop de crossfade entre os 5 frames do fundo.
- * Cada frame fica visível por 3 segundos, com transição
- * suave de 1.5s entre eles.
+ * Retardamos as transições de fundo para aliviar a carga (4500ms).
  */
 function iniciarAnimacaoFundo() {
   const frames = document.querySelectorAll(".junina-bg__frame");
@@ -236,7 +215,7 @@ function iniciarAnimacaoFundo() {
 
   let frameAtual = 0;
   const totalFrames = frames.length;
-  const INTERVALO = 3000; // 3 segundos por frame
+  const INTERVALO = 4500; // 4.5 segundos por frame (retardado em 50%)
 
   setInterval(() => {
     // Remove classe ativa do frame atual
