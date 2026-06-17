@@ -22,15 +22,32 @@
 -->
 <body class="tema-junino">
 
+  <!-- ========== TELA DE INICIALIZAÇÃO (SPLASH) ========== -->
+  <!-- Exibida ao abrir o site. Fundo branco com botão para
+       ativar tela cheia e carregar o menu board. -->
+  <div id="splash-screen" class="splash">
+    <button
+      id="btn-iniciar"
+      class="splash__btn"
+      onclick="iniciarSite()"
+      aria-label="Iniciar site em tela cheia"
+    >
+      Iniciar Site
+    </button>
+  </div>
+
+  <!-- ========== CONTEÚDO DO SITE (oculto até clicar "Iniciar") ========== -->
+  <div id="site-conteudo" class="site-conteudo site-conteudo--oculto">
+
   <!-- ========== FUNDO ANIMADO DE FESTA JUNINA ========== -->
   <!-- Só é visível quando .tema-junino está ativo no body -->
   <div class="junina-bg" id="junina-bg" aria-hidden="true">
     <!-- Frames da animação da feirinha (preenchidos pelo JS) -->
-    <img src="src/junina_frame_1.png" class="junina-bg__frame junina-bg__frame--active" alt="">
-    <img src="src/junina_frame_2.png" class="junina-bg__frame" alt="">
-    <img src="src/junina_frame_3.png" class="junina-bg__frame" alt="">
-    <img src="src/junina_frame_4.png" class="junina-bg__frame" alt="">
-    <img src="src/junina_frame_5.png" class="junina-bg__frame" alt="">
+    <img src="src/junina_frame_1.webp" class="junina-bg__frame junina-bg__frame--active" alt="">
+    <img src="src/junina_frame_2.webp" class="junina-bg__frame" alt="">
+    <img src="src/junina_frame_3.webp" class="junina-bg__frame" alt="">
+    <img src="src/junina_frame_4.webp" class="junina-bg__frame" alt="">
+    <img src="src/junina_frame_5.webp" class="junina-bg__frame" alt="">
 
     <!-- Decorações CSS animadas sobrepostas ao fundo -->
     <div class="junina-decoracoes">
@@ -94,6 +111,8 @@
       <!-- Cards serão injetados dinamicamente pelo script.js -->
     </div>
   </main>
+
+  </div><!-- /#site-conteudo -->
 
   <script src="script.js"></script>
 </body>

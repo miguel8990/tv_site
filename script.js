@@ -20,25 +20,25 @@
 const produtos = [
   {
     nome: "Bem-te-vi",
-    imagem: "src/bem-te-vi.png",
+    imagem: "src/bem-te-vi.webp",
     ingredientes: ["Pão", "Hambúrguer", "Presunto", "Muçarela", "Ovo", "Bacon", "Molho da casa", "Milho", "Alface", "Tomate"],
     preco: 30.00
   },
   {
     nome: "Kaldo-Kenga",
-    imagem: "src/caldo-de-kenga.png",
+    imagem: "src/caldo-de-kenga.webp",
     ingredientes: ["Caldo cremoso", "Frango desfiado", "Tempero caseiro"],
     preco: 15.00
   },
   {
     nome: "Falcão",
-    imagem: "src/falcao.png",
+    imagem: "src/falcao.webp",
     ingredientes: ["Pão", "Presunto", "Muçarela", "Ovo", "Requeijão", "Bacon", "Milho", "Alface", "Molho da casa", "Tomate", "Opções: Frango, Lombo ou Filé"],
     preco: 35.00
   },
   {
     nome: "Misto-Quente",
-    imagem: "src/misto-quente.png",
+    imagem: "src/misto-quente.webp",
     ingredientes: ["Pão francês", "Presunto", "Muçarela"],
     preco: 15.00
   }
@@ -252,24 +252,102 @@ function iniciarAnimacaoFundo() {
 
 
 /* ────────────────────────────────────────────────────────────
- *  6. INICIALIZAÇÃO
- *  Tudo começa quando o DOM estiver pronto.
+ *  6. TELA DE INICIALIZAÇÃO + FULLSCREEN API
+ *  Ao clicar no botão "Iniciar Site", o sistema:
+ *  1. Detecta o navegador e chama a API de fullscreen correta
+ *  2. Esconde a splash screen com fade
+ *  3. Revela o conteúdo do site
+ *  4. Inicializa carrossel, logo e fundo junino
+ * ──────────────────────────────────────────────────────────── */
+
+/**
+ * Solicita tela cheia ao navegador usando a API correta.
+ * Faz ciclos de if/else para cobrir:
+ *   - Chrome, Edge (Chromium), Opera → requestFullscreen()
+ *   - Firefox → mozRequestFullScreen()
+ *   - Safari (desktop/iOS) → webkitRequestFullscreen()
+ *   - IE11 / Edge legado → msRequestFullscreen()
+ *
+ * @returns {Promise|undefined} Promise de fullscreen ou undefined se não suportado
+ */
+function ativarTelaCheia() {
+  const elem = document.documentElement; // <html> — fullscreen na página toda
+
+  if (elem.requestFullscreen) {
+    // Chrome 15+, Edge 79+, Firefox 64+, Opera 15+, Safari 16.4+
+    return elem.requestFullscreen();
+  } else if (elem.webkitRequestFullscreen) {
+    // Safari 5.1+, Chrome antigo, iOS Safari
+    return elem.webkitRequestFullscreen();
+  } else if (elem.mozRequestFullScreen) {
+    // Firefox 10+ (prefixo moz, note o S maiúsculo)
+    return elem.mozRequestFullScreen();
+  } else if (elem.msRequestFullscreen) {
+    // IE 11, Edge 12-18 (legado)
+    return elem.msRequestFullscreen();
+  } else {
+    // Navegador não suporta fullscreen — continua sem
+    console.warn("Fullscreen API não suportada neste navegador.");
+    return Promise.resolve();
+  }
+}
+
+/**
+ * Função chamada pelo onclick do botão "Iniciar Site".
+ * Ativa fullscreen, esconde a splash e inicializa o menu board.
+ */
+function iniciarSite() {
+  // 1. Tenta ativar tela cheia (pode falhar se o navegador bloquear)
+  try {
+    ativarTelaCheia();
+  } catch (erro) {
+    console.warn("Não foi possível ativar tela cheia:", erro);
+  }
+
+  // 2. Esconde a splash screen com fade (transição CSS de 0.5s)
+  const splash = document.getElementById("splash-screen");
+  splash.classList.add("splash--oculta");
+
+  // 3. Revela o conteúdo do site
+  const conteudo = document.getElementById("site-conteudo");
+  conteudo.classList.remove("site-conteudo--oculto");
+
+  // 4. Inicializa todo o sistema do menu board
+  // (Aguarda 1 frame para o DOM do conteúdo estar visível e renderizado)
+  requestAnimationFrame(() => {
+    // Monta os cards no DOM
+    montarCarrossel();
+
+    // Inicia o scroll contínuo (sem flicker)
+    iniciarCarrosselJS();
+
+    // Dispara a animação da logo
+    animarLogo();
+
+    // Re-dispara a animação da logo a cada 60 segundos
+    setInterval(animarLogo, 60000);
+
+    // Inicia a animação do fundo junino (se o tema estiver ativo)
+    if (document.body.classList.contains("tema-junino")) {
+      iniciarAnimacaoFundo();
+    }
+  });
+
+  // 5. Remove a splash do DOM após a transição de fade terminar (500ms)
+  setTimeout(() => {
+    splash.remove();
+  }, 600);
+}
+
+
+/* ────────────────────────────────────────────────────────────
+ *  7. INICIALIZAÇÃO DO DOM
+ *  No DOMContentLoaded, NÃO inicializa o site.
+ *  Apenas aguarda o clique no botão "Iniciar Site".
+ *  Todo o setup real acontece dentro de iniciarSite().
  * ──────────────────────────────────────────────────────────── */
 document.addEventListener("DOMContentLoaded", () => {
-  // Monta os cards no DOM (sem animação CSS)
-  montarCarrossel();
-
-  // Inicia o scroll contínuo via requestAnimationFrame (sem flicker)
-  iniciarCarrosselJS();
-
-  // Dispara a animação da logo imediatamente na carga
-  animarLogo();
-
-  // Re-dispara a animação da logo a cada 60 segundos
-  setInterval(animarLogo, 60000);
-
-  // Inicia a animação do fundo junino (se o tema estiver ativo)
-  if (document.body.classList.contains("tema-junino")) {
-    iniciarAnimacaoFundo();
-  }
+  // Nada a fazer aqui — o site só inicia após clicar o botão.
+  // A função iniciarSite() cuida de tudo.
 });
+
