@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, initial-scale=1.0">
+  <meta name="description" content="Menu Board Digital — Cegonha Lanches. Cardápio digital para exibição em TV.">
+  <title>Cegonha Lanches — Cardápio Digital</title>
+
+  <!-- Google Fonts: Poppins para títulos, Inter para corpo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&family=Poppins:wght@700;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<!--
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║  TEMA JUNINO — Para ativar, adicione class="tema-junino" ao    ║
+  ║  <body>. Para desativar, remova a classe.                      ║
+  ╚══════════════════════════════════════════════════════════════════╝
+-->
+<body class="tema-junino">
+
+  <!-- ========== FUNDO ANIMADO DE FESTA JUNINA ========== -->
+  <!-- Só é visível quando .tema-junino está ativo no body -->
+  <div class="junina-bg" id="junina-bg" aria-hidden="true">
+    <!-- Frames da animação da feirinha (preenchidos pelo JS) -->
+    <img src="src/junina_frame_1.png" class="junina-bg__frame junina-bg__frame--active" alt="">
+    <img src="src/junina_frame_2.png" class="junina-bg__frame" alt="">
+    <img src="src/junina_frame_3.png" class="junina-bg__frame" alt="">
+    <img src="src/junina_frame_4.png" class="junina-bg__frame" alt="">
+    <img src="src/junina_frame_5.png" class="junina-bg__frame" alt="">
+
+    <!-- Decorações CSS animadas sobrepostas ao fundo -->
+    <div class="junina-decoracoes">
+      <!-- Fogueira brilhante animada -->
+      <div class="junina-fogueira"></div>
+      <!-- Fagulhas subindo -->
+      <div class="junina-fagulha junina-fagulha--1"></div>
+      <div class="junina-fagulha junina-fagulha--2"></div>
+      <div class="junina-fagulha junina-fagulha--3"></div>
+      <div class="junina-fagulha junina-fagulha--4"></div>
+      <div class="junina-fagulha junina-fagulha--5"></div>
+      <div class="junina-fagulha junina-fagulha--6"></div>
+      <div class="junina-fagulha junina-fagulha--7"></div>
+      <div class="junina-fagulha junina-fagulha--8"></div>
+      <!-- Estrelas piscando -->
+      <div class="junina-estrela junina-estrela--1"></div>
+      <div class="junina-estrela junina-estrela--2"></div>
+      <div class="junina-estrela junina-estrela--3"></div>
+      <div class="junina-estrela junina-estrela--4"></div>
+      <div class="junina-estrela junina-estrela--5"></div>
+      <div class="junina-estrela junina-estrela--6"></div>
+      <div class="junina-estrela junina-estrela--7"></div>
+      <!-- Luzinhas de varal animadas -->
+      <div class="junina-varal">
+        <span class="junina-luz junina-luz--vermelha"></span>
+        <span class="junina-luz junina-luz--amarela"></span>
+        <span class="junina-luz junina-luz--verde"></span>
+        <span class="junina-luz junina-luz--azul"></span>
+        <span class="junina-luz junina-luz--roxa"></span>
+        <span class="junina-luz junina-luz--laranja"></span>
+        <span class="junina-luz junina-luz--vermelha"></span>
+        <span class="junina-luz junina-luz--amarela"></span>
+        <span class="junina-luz junina-luz--verde"></span>
+        <span class="junina-luz junina-luz--azul"></span>
+        <span class="junina-luz junina-luz--roxa"></span>
+        <span class="junina-luz junina-luz--laranja"></span>
+        <span class="junina-luz junina-luz--vermelha"></span>
+        <span class="junina-luz junina-luz--amarela"></span>
+        <span class="junina-luz junina-luz--verde"></span>
+        <span class="junina-luz junina-luz--azul"></span>
+      </div>
+      <!-- Bandeirinhas no topo do fundo (não sobre o header) -->
+      <div class="junina-bandeirinhas-bg"></div>
+    </div>
+  </div>
+
+  <!-- ========== CABEÇALHO (CENTRALIZADO) ========== -->
+  <header id="cabecalho" class="header">
+    <img
+      src="src/logo2.webp"
+      alt="Logo Cegonha Lanches"
+      class="header__logo"
+      id="logo"
+    >
+    <h1 class="header__titulo">Cegonha Lanches</h1>
+  </header>
+
+  <!-- ========== CARROSSEL ========== -->
+  <main id="carrossel-container" class="carrossel-container">
+    <div id="carrossel-trilha" class="carrossel-trilha">
+      <!-- Cards serão injetados dinamicamente pelo script.js -->
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

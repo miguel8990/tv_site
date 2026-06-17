@@ -1,0 +1,684 @@
+/**
+ * ============================================================
+ *  CEGONHA LANCHES — Menu Board Digital
+ *  Arquivo: style.css
+ *
+ *  Seções:
+ *  1. Reset & Custom Properties
+ *  2. Tipografia & Base
+ *  3. Cabeçalho (Header centralizado + Logo maior)
+ *  4. Animação da Logo (360° spin + grow up + glow up)
+ *  5. Carrossel (container, trilha, fade nas bordas)
+ *  6. Cards dos Produtos (ingredientes em lista vertical)
+ *  7. Animação do Carrossel (scroll contínuo)
+ *  8. TEMA FESTA JUNINA (fundo animado + decorações CSS)
+ * ============================================================
+ */
+
+
+/* ────────────────────────────────────────────────────────────
+ *  1. RESET & CUSTOM PROPERTIES
+ * ──────────────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Paleta Principal — tons quentes e premium */
+  --cor-fundo:        #0f0f0f;
+  --cor-fundo-card:   rgba(18, 18, 18, 0.88);
+  --cor-superficie:   #242424;
+  --cor-borda-card:   rgba(255, 255, 255, 0.08);
+  --cor-texto:        #f5f5f5;
+  --cor-texto-sub:    #c0c0c0;
+  --cor-destaque:     #ff6b35;
+  --cor-destaque-alt: #ffba08;
+  --cor-preco:        #ffba08;
+  --cor-glow:         rgba(255, 186, 8, 0.6);
+
+  /* Tipografia */
+  --font-display: "Poppins", sans-serif;
+  --font-body:    "Inter", sans-serif;
+
+  /* Espaçamentos */
+  --header-height: 12vh;
+  --card-gap: 3vw;
+}
+
+
+/* ────────────────────────────────────────────────────────────
+ *  2. TIPOGRAFIA & BASE
+ * ──────────────────────────────────────────────────────────── */
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  position: relative;
+  background: var(--cor-fundo);
+}
+
+
+/* ────────────────────────────────────────────────────────────
+ *  3. CABEÇALHO — Centralizado com logo maior
+ * ──────────────────────────────────────────────────────────── */
+
+.header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;       /* Centraliza o conteúdo */
+  gap: 2vw;
+  height: var(--header-height);
+  padding: 0 3vw;
+  /* Fundo semitransparente para legibilidade sobre a feirinha */
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 10, 0.85) 0%,
+    rgba(10, 10, 10, 0.5) 70%,
+    transparent 100%
+  );
+}
+
+/* Logo — MAIOR (12vh) */
+.header__logo {
+  height: 10vh;
+  width: auto;
+  object-fit: contain;
+  border-radius: 16px;
+  filter: drop-shadow(0 0 0px transparent);
+  transition: filter 0.3s ease;
+}
+
+/* Título centralizado */
+.header__titulo {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2.5rem, 4vw, 5rem);
+  letter-spacing: 0.03em;
+  text-align: center;
+  background: linear-gradient(
+    135deg,
+    var(--cor-destaque) 0%,
+    var(--cor-destaque-alt) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 10px rgba(255, 107, 53, 0.4));
+}
+
+
+/* ────────────────────────────────────────────────────────────
+ *  4. ANIMAÇÃO DA LOGO — 360° Spin + Grow Up + Glow Up
+ *  Sequência: gira 360° completo → cresce (1.3x) com brilho
+ *  intenso → volta ao normal. Duração total: 3.5s.
+ * ──────────────────────────────────────────────────────────── */
+
+@keyframes logoSpinGrowGlow {
+  /* Fase 1: Spin 360° (0% → 40%) */
+  0% {
+    transform: scale(1) rotate(0deg);
+    filter: drop-shadow(0 0 0px transparent);
+  }
+  40% {
+    transform: scale(1) rotate(360deg);
+    filter: drop-shadow(0 0 10px var(--cor-glow));
+  }
+  /* Fase 2: Grow Up + Glow Up (40% → 70%) */
+  60% {
+    transform: scale(1.35) rotate(360deg);
+    filter: drop-shadow(0 0 30px var(--cor-glow))
+            drop-shadow(0 0 60px var(--cor-glow))
+            drop-shadow(0 0 100px rgba(255, 186, 8, 0.3));
+  }
+  75% {
+    transform: scale(1.25) rotate(360deg);
+    filter: drop-shadow(0 0 40px var(--cor-glow))
+            drop-shadow(0 0 80px rgba(255, 186, 8, 0.4));
+  }
+  /* Fase 3: Volta ao normal (75% → 100%) */
+  100% {
+    transform: scale(1) rotate(360deg);
+    filter: drop-shadow(0 0 0px transparent);
+  }
+}
+
+.logo--animando {
+  animation: logoSpinGrowGlow 3.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+
+/* ────────────────────────────────────────────────────────────
+ *  5. CARROSSEL — Container + Fade nas bordas
+ * ──────────────────────────────────────────────────────────── */
+
+.carrossel-container {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  height: calc(100vh - var(--header-height));
+  width: 100%;
+  overflow: hidden;
+
+  /* Fade nas bordas laterais */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+}
+
+.carrossel-trilha {
+  display: flex;
+  align-items: center;
+  gap: var(--card-gap);
+  padding: 0 5vw;
+  /* Animação controlada via JS (requestAnimationFrame) para
+     evitar flicker/lag no reset do loop CSS. O JS aplica
+     transform: translateX() diretamente. */
+  will-change: transform;
+  pointer-events: none;
+  user-select: none;
+}
+
+
+/* ────────────────────────────────────────────────────────────
+ *  6. CARDS DOS PRODUTOS
+ *  Layout horizontal: imagem (esq.) + info (dir.)
+ *  Ingredientes agora em lista VERTICAL.
+ * ──────────────────────────────────────────────────────────── */
+
+.card {
+  flex: 0 0 80vw;
+  max-width: 80vw;
+  height: 72vh;
+
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 3vw;
+
+  /* Visual — fundo com glassmorphism sobre a feirinha */
+  background: var(--cor-fundo-card);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  border: 1px solid var(--cor-borda-card);
+  border-radius: 28px;
+  padding: 2.5vh 2.5vw;
+  overflow: hidden;
+
+  box-shadow:
+    0 12px 48px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Wrapper da imagem */
+.card__img-wrapper {
+  flex: 0 0 42%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--cor-superficie);
+}
+
+/* Imagem do produto — 1:1 quadrada */
+.card__img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+/* Bloco de informações — CSS GRID com linhas FIXAS
+ * As 3 seções (nome, ingredientes, preço) têm alturas
+ * proporcionais fixas. O conteúdo de cada seção NUNCA
+ * afeta a posição das outras.
+ *
+ * Distribuição vertical:
+ *   Nome:          15% do card  → sempre no topo
+ *   Ingredientes:  55% do card  → área fixa no meio
+ *   Preço:         20% do card  → sempre no rodapé
+ *   Padding:       10% restante → espaçamento interno
+ */
+.card__info {
+  flex: 1;
+  display: grid;
+  grid-template-rows: 15% 55% 20%;
+  align-content: start;
+  gap: 1.5vh;
+  padding: 2vh 1vw;
+  overflow: hidden;
+}
+
+/* Nome do lanche — fixo no TOPO da grid (linha 1) */
+.card__nome {
+  grid-row: 1;
+  align-self: start;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2.8rem, 4.5vw, 5.5rem);
+  line-height: 1.1;
+  color: var(--cor-texto);
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Ingredientes — fixo no MEIO da grid (linha 2)
+ * A altura é definida pela grid-row (55%).
+ * Se a lista é curta, os itens ficam TODOS na 1ª coluna
+ * e o espaço à direita fica vazio.
+ * Só flui para a 2ª coluna quando a 1ª estiver cheia.
+ *
+ * Isso é garantido por column-fill: auto, que preenche
+ * cada coluna sequencialmente (1ª inteira → 2ª). */
+.card__ingredientes {
+  grid-row: 2;
+  align-self: start;
+
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-left: 4px solid var(--cor-destaque);
+  padding-left: 1.2vw;
+
+  /* Altura fixa = 100% da célula da grid (os 55% definidos) */
+  height: 100%;
+
+  /* Permite até 2 colunas, mas column-fill: auto garante
+   * que a 1ª coluna é preenchida INTEIRA antes de usar a 2ª.
+   * Poucos itens = 1 coluna só. Muitos itens = 2 colunas. */
+  column-count: 2;
+  column-gap: 2vw;
+  column-fill: auto;
+
+  overflow: hidden;
+}
+
+.card__ingrediente-item {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: clamp(1rem, 1.5vw, 1.8rem);
+  line-height: 1.5;
+  color: var(--cor-texto-sub);
+  /* Impede que um item seja partido entre colunas */
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  padding-bottom: 0.6vh;
+}
+
+/* Bullet decorativo antes de cada ingrediente */
+.card__ingrediente-item::before {
+  content: "•";
+  color: var(--cor-destaque);
+  margin-right: 0.6vw;
+  font-weight: 900;
+}
+
+/* Preço — fixo no RODAPÉ da grid (linha 3) */
+.card__preco {
+  grid-row: 3;
+  align-self: end;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(3rem, 5vw, 6rem);
+  color: var(--cor-preco);
+  letter-spacing: -0.02em;
+  text-shadow:
+    0 0 20px rgba(255, 186, 8, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+
+/* ────────────────────────────────────────────────────────────
+ *  7. CARROSSEL — Animação agora controlada 100% via JS
+ *  (requestAnimationFrame) para eliminar o flicker/lag
+ *  que ocorria quando a animação CSS resetava o loop.
+ *  O @keyframes scrollCarrossel foi removido.
+ * ──────────────────────────────────────────────────────────── */
+
+
+/* ================================================================
+ * ================================================================
+ *
+ *  8. TEMA FESTA JUNINA — 100% DESPLUGÁVEL
+ *
+ *  Para ATIVAR:  <body class="tema-junino">
+ *  Para REMOVER: <body>
+ *
+ *  Inclui:
+ *  - Fundo animado com 5 frames (feirinha)
+ *  - Fogueira brilhante com fagulhas
+ *  - Estrelas piscando
+ *  - Varal de luzes coloridas
+ *  - Bandeirinhas no fundo (não sobre o header)
+ *  - Cards com borda dourada sutil
+ *
+ * ================================================================
+ * ================================================================ */
+
+/* ---- Esconde TUDO do tema quando a classe não está no body ---- */
+.junina-bg {
+  display: none;
+}
+
+/* ---- Ativa quando .tema-junino está presente ---- */
+.tema-junino .junina-bg {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* ---- Frames da animação de fundo (crossfade) ---- */
+.junina-bg__frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+  pointer-events: none;
+}
+
+.junina-bg__frame--active {
+  opacity: 1;
+}
+
+/* Escurecimento sutil sobre o fundo para manter legibilidade */
+.tema-junino .junina-bg::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 1;
+  pointer-events: none;
+}
+
+
+/* ──────────────────────────────
+ *  DECORAÇÕES CSS ANIMADAS
+ *  Sobrepostas ao fundo da feirinha
+ * ────────────────────────────── */
+
+.junina-decoracoes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+
+/* ---- FOGUEIRA — Brilho pulsante no centro-baixo ---- */
+.junina-fogueira {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20vw;
+  height: 20vh;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    rgba(255, 120, 20, 0.4) 0%,
+    rgba(255, 80, 0, 0.15) 40%,
+    transparent 70%
+  );
+  animation: fogueiraPulso 2s ease-in-out infinite alternate;
+}
+
+@keyframes fogueiraPulso {
+  0% {
+    opacity: 0.6;
+    transform: translateX(-50%) scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.15);
+  }
+}
+
+
+/* ---- FAGULHAS — Partículas subindo da fogueira ---- */
+.junina-fagulha {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #ffba08;
+  box-shadow: 0 0 6px 2px rgba(255, 186, 8, 0.8);
+  animation: fagulhaSubir 4s ease-out infinite;
+  opacity: 0;
+}
+
+@keyframes fagulhaSubir {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(1);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40vh) translateX(var(--drift)) scale(0.2);
+  }
+}
+
+/* Posições e tempos variados para cada fagulha */
+.junina-fagulha--1 { bottom: 12%; left: 48%; --drift: -15px; animation-delay: 0s; animation-duration: 3.5s; }
+.junina-fagulha--2 { bottom: 14%; left: 51%; --drift: 20px;  animation-delay: 0.5s; animation-duration: 4s; }
+.junina-fagulha--3 { bottom: 10%; left: 49%; --drift: -8px;  animation-delay: 1s; animation-duration: 3.8s; }
+.junina-fagulha--4 { bottom: 13%; left: 52%; --drift: 12px;  animation-delay: 1.5s; animation-duration: 4.2s; }
+.junina-fagulha--5 { bottom: 11%; left: 47%; --drift: -22px; animation-delay: 2s; animation-duration: 3.2s; }
+.junina-fagulha--6 { bottom: 15%; left: 50%; --drift: 5px;   animation-delay: 2.5s; animation-duration: 3.6s; }
+.junina-fagulha--7 { bottom: 12%; left: 53%; --drift: 18px;  animation-delay: 0.8s; animation-duration: 4.5s; }
+.junina-fagulha--8 { bottom: 14%; left: 46%; --drift: -10px; animation-delay: 1.8s; animation-duration: 3.9s; }
+
+
+/* ---- ESTRELAS — Piscando no céu ---- */
+.junina-estrela {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.6);
+  animation: estrelaPiscar 3s ease-in-out infinite alternate;
+}
+
+@keyframes estrelaPiscar {
+  0%   { opacity: 0.2; transform: scale(0.8); }
+  50%  { opacity: 1;   transform: scale(1.2); }
+  100% { opacity: 0.3; transform: scale(0.9); }
+}
+
+.junina-estrela--1 { top: 5%;  left: 10%; animation-delay: 0s; }
+.junina-estrela--2 { top: 8%;  left: 30%; animation-delay: 0.7s; animation-duration: 2.5s; }
+.junina-estrela--3 { top: 3%;  left: 55%; animation-delay: 1.2s; animation-duration: 3.5s; }
+.junina-estrela--4 { top: 12%; left: 75%; animation-delay: 0.4s; animation-duration: 2.8s; }
+.junina-estrela--5 { top: 6%;  left: 88%; animation-delay: 1.8s; }
+.junina-estrela--6 { top: 15%; left: 20%; animation-delay: 2.1s; animation-duration: 4s; }
+.junina-estrela--7 { top: 10%; left: 65%; animation-delay: 0.9s; animation-duration: 3.2s; }
+
+
+/* ---- VARAL DE LUZES — Luzinhas coloridas no topo ---- */
+.junina-varal {
+  position: absolute;
+  top: 14vh;          /* Logo abaixo do header */
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 2vw;
+  /* Fio do varal */
+  border-top: 2px solid rgba(139, 69, 19, 0.6);
+}
+
+.junina-luz {
+  display: block;
+  width: 12px;
+  height: 18px;
+  border-radius: 0 0 50% 50%;
+  margin-top: -2px;
+  animation: luzPiscar 2s ease-in-out infinite alternate;
+  /* Leve balanço */
+  transform-origin: top center;
+}
+
+@keyframes luzPiscar {
+  0%   { opacity: 0.5; filter: brightness(0.6); }
+  50%  { opacity: 1;   filter: brightness(1.3); }
+  100% { opacity: 0.7; filter: brightness(0.8); }
+}
+
+/* Cores das luzes */
+.junina-luz--vermelha { background: #e63946; box-shadow: 0 4px 12px rgba(230, 57, 70, 0.6); animation-delay: 0s; }
+.junina-luz--amarela  { background: #ffba08; box-shadow: 0 4px 12px rgba(255, 186, 8, 0.6); animation-delay: 0.3s; }
+.junina-luz--verde    { background: #2d6a4f; box-shadow: 0 4px 12px rgba(45, 106, 79, 0.6); animation-delay: 0.6s; }
+.junina-luz--azul     { background: #457b9d; box-shadow: 0 4px 12px rgba(69, 123, 157, 0.6); animation-delay: 0.9s; }
+.junina-luz--roxa     { background: #7b2cbf; box-shadow: 0 4px 12px rgba(123, 44, 191, 0.6); animation-delay: 1.2s; }
+.junina-luz--laranja  { background: #ff6b35; box-shadow: 0 4px 12px rgba(255, 107, 53, 0.6); animation-delay: 1.5s; }
+
+
+/* ---- BANDEIRINHAS NO FUNDO (não sobre o header) ---- */
+.junina-bandeirinhas-bg {
+  position: absolute;
+  top: 16vh;
+  left: -5%;
+  width: 110%;
+  height: 5vh;
+  z-index: 1;
+  /* Barbante */
+  border-top: 2px dashed rgba(139, 69, 19, 0.4);
+  /* Bandeirinhas via gradientes repetidos */
+  background: repeating-linear-gradient(
+    90deg,
+    #e63946 0px,     #e63946 22px,
+    transparent 22px, transparent 26px,
+    #ffba08 26px,    #ffba08 48px,
+    transparent 48px, transparent 52px,
+    #2d6a4f 52px,    #2d6a4f 74px,
+    transparent 74px, transparent 78px,
+    #457b9d 78px,    #457b9d 100px,
+    transparent 100px, transparent 104px,
+    #7b2cbf 104px,   #7b2cbf 126px,
+    transparent 126px, transparent 130px
+  );
+  -webkit-clip-path: polygon(
+    /* Triângulos de bandeirinhas repetidos */
+    0% 0%, 1.2% 0%, 2% 100%, 0.2% 100%,
+    2.6% 0%, 3.8% 0%, 4.6% 100%, 2.8% 100%,
+    5.2% 0%, 6.4% 0%, 7.2% 100%, 5.4% 100%,
+    7.8% 0%, 9% 0%, 9.8% 100%, 8% 100%,
+    10.4% 0%, 11.6% 0%, 12.4% 100%, 10.6% 100%,
+    13% 0%, 14.2% 0%, 15% 100%, 13.2% 100%,
+    15.6% 0%, 16.8% 0%, 17.6% 100%, 15.8% 100%,
+    18.2% 0%, 19.4% 0%, 20.2% 100%, 18.4% 100%,
+    20.8% 0%, 22% 0%, 22.8% 100%, 21% 100%,
+    23.4% 0%, 24.6% 0%, 25.4% 100%, 23.6% 100%,
+    26% 0%, 27.2% 0%, 28% 100%, 26.2% 100%,
+    28.6% 0%, 29.8% 0%, 30.6% 100%, 28.8% 100%,
+    31.2% 0%, 32.4% 0%, 33.2% 100%, 31.4% 100%,
+    33.8% 0%, 35% 0%, 35.8% 100%, 34% 100%,
+    36.4% 0%, 37.6% 0%, 38.4% 100%, 36.6% 100%,
+    39% 0%, 40.2% 0%, 41% 100%, 39.2% 100%,
+    41.6% 0%, 42.8% 0%, 43.6% 100%, 41.8% 100%,
+    44.2% 0%, 45.4% 0%, 46.2% 100%, 44.4% 100%,
+    46.8% 0%, 48% 0%, 48.8% 100%, 47% 100%,
+    49.4% 0%, 50.6% 0%, 51.4% 100%, 49.6% 100%
+  );
+  clip-path: polygon(
+    0% 0%, 1.2% 0%, 2% 100%, 0.2% 100%,
+    2.6% 0%, 3.8% 0%, 4.6% 100%, 2.8% 100%,
+    5.2% 0%, 6.4% 0%, 7.2% 100%, 5.4% 100%,
+    7.8% 0%, 9% 0%, 9.8% 100%, 8% 100%,
+    10.4% 0%, 11.6% 0%, 12.4% 100%, 10.6% 100%,
+    13% 0%, 14.2% 0%, 15% 100%, 13.2% 100%,
+    15.6% 0%, 16.8% 0%, 17.6% 100%, 15.8% 100%,
+    18.2% 0%, 19.4% 0%, 20.2% 100%, 18.4% 100%,
+    20.8% 0%, 22% 0%, 22.8% 100%, 21% 100%,
+    23.4% 0%, 24.6% 0%, 25.4% 100%, 23.6% 100%,
+    26% 0%, 27.2% 0%, 28% 100%, 26.2% 100%,
+    28.6% 0%, 29.8% 0%, 30.6% 100%, 28.8% 100%,
+    31.2% 0%, 32.4% 0%, 33.2% 100%, 31.4% 100%,
+    33.8% 0%, 35% 0%, 35.8% 100%, 34% 100%,
+    36.4% 0%, 37.6% 0%, 38.4% 100%, 36.6% 100%,
+    39% 0%, 40.2% 0%, 41% 100%, 39.2% 100%,
+    41.6% 0%, 42.8% 0%, 43.6% 100%, 41.8% 100%,
+    44.2% 0%, 45.4% 0%, 46.2% 100%, 44.4% 100%,
+    46.8% 0%, 48% 0%, 48.8% 100%, 47% 100%,
+    49.4% 0%, 50.6% 0%, 51.4% 100%, 49.6% 100%
+  );
+  opacity: 0.6;
+  animation: bandeirinhasBalanco 4s ease-in-out infinite alternate;
+}
+
+@keyframes bandeirinhasBalanco {
+  0% {
+    transform: rotate(-0.3deg) translateX(0);
+  }
+  100% {
+    transform: rotate(0.3deg) translateX(-1%);
+  }
+}
+
+
+/* ---- Ajustes nos cards com o tema junino ---- */
+.tema-junino .card {
+  border-color: rgba(255, 186, 8, 0.12);
+  box-shadow:
+    0 12px 48px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 186, 8, 0.06),
+    inset 0 1px 0 rgba(255, 186, 8, 0.05);
+}
+
+/* Título com cores juninas */
+.tema-junino .header__titulo {
+  background: linear-gradient(
+    135deg,
+    #e63946 0%,
+    var(--cor-destaque-alt) 50%,
+    #2d6a4f 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+}
